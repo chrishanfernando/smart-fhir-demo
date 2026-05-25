@@ -1,4 +1,4 @@
-# Heidi SMART on FHIR demo
+# SMART on FHIR demo
 
 A ~100-line SMART on FHIR app that launches inside a sandbox EHR, reads the patient and their recent observations, and writes a clinical note (`DocumentReference`) back — either as a new note or as an addendum to the most recent one.
 
@@ -6,13 +6,9 @@ Built against the public [SMART Health IT sandbox](https://launch.smarthealthit.
 
 ## Why this exists
 
-Built as an artefact for a Product Manager (Integrations) application at [Heidi](https://heidihealth.com). The JD calls out:
+A working reference for the parts of SMART on FHIR that matter for ambient clinical apps: the launch + OAuth flow, the FHIR resources a scribe-style product actually touches (Patient, Observation, DocumentReference), and the addendum-vs-edit distinction that EHRs handle differently in the wild.
 
-- **SMART on FHIR launches inside the chart** — this app does exactly that.
-- **Structured write-back into Epic, Cerner, Athena…** — most demos read; this one writes.
-- **Addendum vs edit** — the write-back flow surfaces this explicitly via `DocumentReference.relatesTo.code = appends`, which is the FHIR mechanism for the addendum conversation.
-
-The goal is not to be production code — it's to demonstrate working knowledge of the SMART launch flow, scopes, the FHIR resources that matter for an ambient scribe (Patient, Observation, DocumentReference), and the addendum-vs-edit distinction.
+Most public SMART demos only read. This one also writes back, which is where the interesting integration questions live.
 
 ## Run it
 
@@ -51,18 +47,18 @@ When the "addendum" checkbox is ticked, the new `DocumentReference` is created w
 }]
 ```
 
-This is the FHIR-canonical way to say "this note appends the previous one" rather than replacing it (`replaces`) or transforming it (`transforms`). Different EHRs interpret these codes differently in their UIs (Cerner's addendum behaviour is the classic example), which is exactly the kind of EMR-reality-vs-spec gap a platform PM needs to be able to reason about.
+This is the FHIR-canonical way to say "this note appends the previous one" rather than replacing it (`replaces`) or transforming it (`transforms`). Different EHRs interpret these codes differently in their UIs (Cerner's addendum behaviour is the classic example), which is exactly the kind of EMR-reality-vs-spec gap a real integration has to deal with.
 
 ## What this deliberately doesn't do
 
 - No backend — the sandbox lets you use a public client, so there's no token exchange to protect.
-- No production EHR vendor quirks — that's the whole point of the sandbox; this is the spec-clean baseline you'd then layer Epic/Cerner/Athena-specific handling on top of.
+- No production EHR vendor quirks — that's the whole point of the sandbox; this is the spec-clean baseline you'd then layer Epic / Cerner / Athena-specific handling on top of.
 - No FHIR resource validation beyond what the server enforces.
 
 ## Stack
 
 - [fhirclient.js](https://github.com/smart-on-fhir/client-js) (the official SMART client library) — handles the OAuth dance and gives you a typed-ish client for FHIR requests.
-- Vanilla HTML/CSS/JS. No framework.
+- Vanilla HTML / CSS / JS. No framework.
 
 ## Licence
 
