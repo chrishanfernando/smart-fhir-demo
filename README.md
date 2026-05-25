@@ -103,6 +103,23 @@ This is the FHIR-canonical way to say "this note appends the previous one" rathe
 - No production EHR vendor quirks — that's the whole point of the sandbox; this is the spec-clean baseline you'd then layer Epic / Cerner / Athena-specific handling on top of.
 - No FHIR resource validation beyond what the server enforces.
 
+## What a real EHR adds on top of this
+
+The sandbox gives you a spec-clean baseline. Production EHR integration is mostly about what the spec leaves under-specified or what individual vendors do differently. The list of things this demo would need to grow before pointing at a real Epic / Cerner / Athena endpoint:
+
+- **Token refresh.** Sandbox tokens live long enough for a demo. Real tokens expire mid-session — need the `offline_access` scope and a refresh-token flow.
+- **Scope downgrade.** The EHR admin may grant fewer scopes than the app asked for. The app has to inspect what it actually got back and degrade gracefully instead of assuming.
+- **Encounter context.** A real note belongs to a *visit*, not just a patient. Without an `Encounter/{id}` binding the note may not appear in the encounter summary the clinician is looking at.
+- **Vendor-specific note types.** LOINC `11506-3` works in spec. In practice Epic / Cerner / Athena have their own note-type catalogues (often vendor-prefixed) and reject arbitrary LOINC codes silently or with cryptic errors.
+- **Sectional write-back.** Production notes split into HPI / Assessment / Plan / etc., each mapped to a specific field in the EHR's note template. The `DocumentReference` becomes a wrapper around many sub-writes, not a single blob.
+- **Addendum vs edit, enforced.** Some EHRs forbid editing a finalised note and only allow addenda (Cerner). Others allow `PUT` overwrites. Same app code, different vendor branches.
+- **Provenance and audit.** Every write needs a `Provenance` resource so the EHR can attribute the note to ambient-AI-with-clinician-review rather than a human author. Often a regulatory requirement, not optional.
+- **Retry and idempotency.** Sandbox is fast and reliable. Real EHR endpoints time out, return `200` with errors in the body, or partially succeed. Writes have to be retry-safe.
+- **Multi-tenancy.** One app, many customer EHRs — each with a different base URL, client ID, scope set, and quirks. The config surface becomes its own product.
+- **Certification + change control.** Epic App Orchard registration. Vendor API changes that break you with little notice. Version pinning vs. forward-compatibility trade-offs.
+
+The demo is the easy 20%. The list above is the 80% that decides whether an integration is actually usable in a clinic.
+
 ## Stack
 
 - [fhirclient.js](https://github.com/smart-on-fhir/client-js) (the official SMART client library) — handles the OAuth dance and gives you a typed-ish client for FHIR requests.
