@@ -2,3 +2,7 @@
 node_modules/
 .vscode/
 .idea/
+
+# Source recordings — convert to GIF and commit that instead
+*.mov
+*.mp4

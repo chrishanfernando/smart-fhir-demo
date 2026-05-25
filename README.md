@@ -4,6 +4,8 @@ A ~100-line SMART on FHIR app that launches inside a sandbox EHR, reads the pati
 
 Built against the public [SMART Health IT sandbox](https://launch.smarthealthit.org). No backend, no build step — single-page app served as static files.
 
+![Demo — launching from the sandbox, viewing Patient + Observations, writing a DocumentReference back](demo.gif)
+
 ## Why this exists
 
 A working reference for the parts of SMART on FHIR that matter for ambient clinical apps: the launch + OAuth flow, the FHIR resources a scribe-style product actually touches (`Patient`, `Observation`, `DocumentReference`), and the addendum-vs-edit distinction that EHRs handle differently in the wild.
