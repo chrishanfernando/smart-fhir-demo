@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Heidi SMART on FHIR demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/fhirclient@2.5.4/build/fhir-client.js"></script>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 0.2rem; }
+    .sub { color: #666; margin-top: 0; }
+    section { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { color: #555; font-weight: 600; }
+    textarea { width: 100%; min-height: 120px; padding: 8px; font: inherit; box-sizing: border-box; }
+    button { padding: 8px 14px; font: inherit; cursor: pointer; }
+    .status { margin-top: 0.5rem; font-size: 13px; color: #555; min-height: 1.4em; }
+    .ok { color: #1a7f37; }
+    .err { color: #b3261e; white-space: pre-wrap; }
+    code { background: #f4f4f4; padding: 1px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Heidi SMART on FHIR demo</h1>
+  <p class="sub">Read Patient + Observations and write a clinical note (DocumentReference) back to a SMART sandbox EHR.</p>
+
+  <section>
+    <h2>Patient</h2>
+    <div id="patient">Loading...</div>
+  </section>
+
+  <section>
+    <h2>Recent observations</h2>
+    <div id="observations">Loading...</div>
+  </section>
+
+  <section>
+    <h2>Write a clinical note</h2>
+    <p class="sub">
+      Posts a <code>DocumentReference</code> to the EHR. Choose whether this is a new note or an addendum
+      to the most recent existing note (sets <code>relatesTo.code = appends</code>).
+    </p>
+    <label>
+      <input type="checkbox" id="addendum"> Treat as addendum to most recent note
+    </label>
+    <textarea id="note" placeholder="Patient reports symptoms have improved since last visit..."></textarea>
+    <p>
+      <button id="write">Write DocumentReference</button>
+    </p>
+    <div id="writeStatus" class="status"></div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Launching SMART app...</title>
+  <script src="https://cdn.jsdelivr.net/npm/fhirclient@2.5.4/build/fhir-client.js"></script>
+</head>
+<body>
+  <p>Launching SMART app...</p>
+  <script>
+    FHIR.oauth2.authorize({
+      clientId: "heidi-smart-fhir-demo",
+      scope: [
+        "launch",
+        "openid",
+        "fhirUser",
+        "patient/Patient.read",
+        "patient/Observation.read",
+        "patient/DocumentReference.write"
+      ].join(" "),
+      redirectUri: "index.html"
+    });
+  </script>
+</body>
+</html>
